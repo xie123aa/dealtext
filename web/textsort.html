@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+    <script type="text/javascript" src="easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+
+</head>
+<body>
+        <h2>文本排序</h2>
+        <p>该页面可对指定格式的文本进行排序，例如：一行数据带一个换行符</p>
+        <div style="float:left">
+        <div id="p" class="easyui-panel" title="输入" style="width:1000px;height:1000px;padding:10px;">
+            <div style="margin-bottom:20px">
+                <!--文本框-->
+                <input id="text1" class="easyui-textbox" label="Description:" labelPosition="top" multiline="true" value="请在这里输入你要进行排序的字段" style="width:100%;height:800px">
+            </div>
+            <div style="float:top">
+                <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="sort()">排序</a>
+            </div>
+        </div>
+        </div>
+        <div style="float:left">
+        <div id="p2" class="easyui-panel" title="输出" style="width:1000px;height:1000px;padding:10px;">
+            <div style="margin-bottom:20px">
+                <!--文本框-->
+                <input id="text2" class="easyui-textbox" label="Description:" labelPosition="top" multiline="true" value="排序后的结果" style="width:100%;height:800px">
+            </div>
+        </div>
+        </div>
+</body>
+</html>
+<script>
+    function sort()
+    {
+        var text = $("#text1").textbox('getValue');
+        console.log(text);
+        var deal= text.split(/[(\r\n)\r\n]+/);//正则表达式将其封装成数组
+        deal.sort(function compareFunction(item1, item2) {
+            return item1.localeCompare(item2);
+        });
+        var show = deal.join("\r");
+        $("#text2").textbox('setValue',show );
+
+    }
+</script>

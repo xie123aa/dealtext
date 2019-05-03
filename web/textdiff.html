@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+    <script type="text/javascript" src="easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+
+</head>
+<body>
+        <h2>文本对比</h2>
+        <p>该页面可对指定格式的文本进行对比，例如：一行数据带一个换行符</p>
+        <div style="float:left">
+        <div id="p" class="easyui-panel" title="文本输入一" style="width:1000px;height:1000px;padding:10px;">
+            <div style="margin-bottom:20px">
+                <h2 id="inshow"></h2>
+                <!--文本框-->
+                <input id="text1" class="easyui-textbox" label="Description:" labelPosition="top" multiline="true" value="请在这里输入你要进行对比的字段" style="width:100%;height:800px">
+            </div>
+            <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'" onclick="sort()">对比</a>
+        </div>
+        </div>
+        <div style="float:left">
+        <div id="p2" class="easyui-panel" title="文本输入二" style="width:1000px;height:1000px;padding:10px;">
+            <div style="margin-bottom:20px">
+                <h2 id="inshow1"></h2>
+                <!--文本框-->
+                <input id="text2" class="easyui-textbox" label="Description:" labelPosition="top" multiline="true" value="对比数据" style="width:100%;height:800px">
+            </div>
+        </div>
+        </div>
+        <div style="float:left">
+        <div style="margin-bottom:20px" >
+            <h2 id="outshow">相同的数据</h2>
+            <input class="easyui-textbox"  id="outcome"  labelPosition="top" multiline="true" value="对比结果." style="width:400px;height:300px">
+        </div>
+        </div>
+        <div style="float:left">
+        <div style="margin-bottom:20px">
+            <h2 id="outshow1">1中不同的数据</h2>
+            <input class="easyui-textbox"  id="outcome1"  labelPosition="top" multiline="true" value="对比结果." style="width:400px;height:300px">
+        </div>
+        </div>
+        <div style="float:left">
+        <div style="margin-bottom:20px">
+            <h2 id="outshow2">2中不同的数据</h2>
+            <input class="easyui-textbox"  id="outcome2"  labelPosition="top" multiline="true" value="对比结果." style="width:400px;height:300px">
+        </div>
+        </div>
+
+
+</body>
+</html>
+<script>
+    function sort()
+    {
+        var text1 = $("#text1").textbox('getValue');
+        console.log(text1);
+        var deal1= text1.split(/[(\r\n)\r\n]+/);//正则表达式将其封装成数组
+        var text2 = $("#text2").textbox('getValue');
+        var deal2= text2.split(/[(\r\n)\r\n]+/);//正则表达式将其封装成数组
+        var same= [];
+        for ( var i = 0; i <deal1.length; i++){
+                for(var j=0; j<deal2.length;j++){
+                    if (deal1[i]=== deal2[j]){
+                        same.push(deal1[i]);
+                        break;
+                    }
+                }
+        };
+        var description= "当前输入数据个数为:"+deal1.length;
+        $("#inshow").text(description);
+
+        var description= "当前输入数据个数为:"+deal2.length;
+        $("#inshow1").text(description);
+
+        var aftertext1 = [].concat(deal1);
+        var aftertext2=  [].concat(deal2);//引用传递很烦，必须用这样重新赋值
+        var description= "(未去重)相同的数据："+same.length;
+        $("#outshow").text(description);//显示相同的数据个数
+        $("#outcome").textbox('setValue',same.join("\r"));//将相同的数据展示到页面
+
+        var outcome1=reduce(aftertext1,aftertext2);
+        $("#outcome1").textbox('setValue',outcome1.join("\r"));//将文本1中不同的数据展示到页面
+        var description= "当前文本1不同数据个数为:"+outcome1.length;
+        $("#outshow1").text(description);
+
+        var outcome2=reduce(deal2,deal1);
+        $("#outcome2").textbox('setValue',outcome2.join("\r"));
+        var description= "当前文本2不同数据个数为:"+outcome2.length;
+        $("#outshow2").text(description);
+
+
+
+
+    }
+    function reduce(a,b) {
+        for (var i = 0; i < a.length; i++) {
+            for (var j = 0; j < b.length; j++) {
+                if (a[i] === b[j]) {
+                    if (i > -1) {
+                        a.splice(i, 1);
+                        i--;//根据数据结构的数组性质，考虑删除元素，元素要回移。（这个方法底层将数据移回去了）
+                    }
+                    break;
+                }
+            }
+        }
+        return a;
+    }
+</script>
